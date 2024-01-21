@@ -28,6 +28,21 @@ class GridObstacle:
         # Getter method to return number of obstacles
         return len(self.obstacles)
 
+    def is_obstacle(self,idx):
+        # Function to check if a cell is an obstacle or not
+        grid = self.get_obstacles() # Gets the master list of obstacles
+        if idx in grid:
+            #print('true')
+            return True
+        else:
+            #print('false')
+            return False
+
+    def add_custom_obs(self, idx):
+        # Function to add a custom obstacle (needs to be an array of size 2 or more).
+        # Used for checking if planner start point function is working
+        self.check_collision_and_add(idx)
+
     def check_collision_and_add(self,idx):
         # This function checks if certain obstacles (individual cells) already exist. If they exist, they do not get
         # duplicated to the list
