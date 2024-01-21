@@ -3,6 +3,7 @@ import numpy as np
 
 from GridObstacle import GridObstacle
 from ObstacleGenerator import ObstacleGenerator
+from DepthFirstSearch import DepthFirstSearch
 
 
 def init_plot():
@@ -34,8 +35,11 @@ def main():
     go = obstacle_gen.generate_obstacles(go,num_obstacles)  # Generate the obstacles based on the amount required
     plot_obstacles(go,axs)                                  # Plot the obstacles
     plt.title('Obstacle Field\nCoverage rate of ' + str(obstacle_gen.rate) + '%') # Add plot title
-    plt.show()                                              # Due to PyCharm backend, this function will show the figure
-
+    #plt.show()                                             # Due to PyCharm backend, this function will show the figure
+    dfs = DepthFirstSearch()
+    dfs.set_starting_idx(go)
+    axs.scatter(dfs.start_idx[0],dfs.start_idx[1])
+    plt.show()
 
 if __name__ == "__main__":
     main()  # Runs the script
