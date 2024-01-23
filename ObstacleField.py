@@ -9,8 +9,8 @@ from DepthFirstSearch import DepthFirstSearch
 def init_plot():
     # This function initializes the figure object that will contain the obstacle field
     fig, ax = plt.subplots(figsize=(10, 10))                    # Create figure and axis object
-    ax.set_xlim([0, 128])                                       # Set x limit
-    ax.set_ylim([0, 128])                                       # Set y limit
+    ax.set_xlim([-2, 130])                                       # Set x limit
+    ax.set_ylim([-2, 130])                                       # Set y limit
     ax.set_yticks(np.arange(0, 128.1, 1), minor=True)           # Assign minor y-axis ticks
     ax.set_yticks(np.arange(0, 128.1, 128 / 8), minor=False)    # Assign major y-axis ticks
     ax.set_xticks(np.arange(0, 128.1, 1), minor=True)           # Assign minor x-axis ticks
@@ -29,7 +29,7 @@ def plot_obstacles(go,axs):
 def main():
     # Main function to run the script
     go = GridObstacle([])                               # Create a GridObstacle object
-    obstacle_gen = ObstacleGenerator([],10)   # Create a ObstacleGenerator object. Initialize with coverage rate
+    obstacle_gen = ObstacleGenerator([],70)   # Create a ObstacleGenerator object. Initialize with coverage rate
     fig, axs = init_plot()                              # Initialize the figure
     num_obstacles = obstacle_gen.obstacle_coverage()        # Get number of obstacles based on coverage rate
     go = obstacle_gen.generate_obstacles(go,num_obstacles)  # Generate the obstacles based on the amount required
@@ -38,8 +38,10 @@ def main():
     #plt.show()                                             # Due to PyCharm backend, this function will show the figure
     dfs = DepthFirstSearch()
     dfs.set_starting_idx(go)
-    axs.scatter(dfs.start_idx[0],dfs.start_idx[1])
-    plt.show()
+    dfs.set_goal_idx(go)
+    # axs.scatter(dfs.start_idx[0],dfs.start_idx[1], color = "red",s = 12)
+    dfs.DFS(go,fig,axs)
+
 
 if __name__ == "__main__":
     main()  # Runs the script
