@@ -41,7 +41,7 @@ class GridObstacle:
     def add_custom_obs(self, idx):
         # Function to add a custom obstacle (needs to be an array of size 2 or more).
         # Used for checking if planner start point function is working
-        self.check_collision_and_add(idx)
+        self.obstacles.append(idx)
 
     def check_collision_and_add(self,idx):
         # This function checks if certain obstacles (individual cells) already exist. If they exist, they do not get

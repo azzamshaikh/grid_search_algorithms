@@ -45,7 +45,7 @@ class DepthFirstSearch:
         if go.is_obstacle(self.goal_idx):
             print("It is an obstacle. Updating the array")
             self.goal_idx[0] = self.goal_idx[0] - 1
-            self.set_starting_idx(go)
+            self.set_goal_idx(go)
         else:
             print("The goal index of " + str(self.goal_idx) + " is valid! Ending at this point!")
 
@@ -83,63 +83,50 @@ class DepthFirstSearch:
                     neighbors.append(new_idx)
         return neighbors
 
-    def DFS(self,go,fig,axs):
+    def DFS(self,go):
 
         self.stack.append(self.start_idx)
-        axs.scatter(self.start_idx[0], self.start_idx[1], marker="s",color=self.start_color, s=12)
-        #print(len(self.stack))
+        plt.plot(self.start_idx[0], self.start_idx[1], 'go',markersize = 4)
+        # print(len(self.stack))
         self.mark_visited(self.start_idx)
-        axs.scatter(self.start_idx[0], self.start_idx[1], marker="s", color=self.visited_color, s=12)
+        plt.plot(self.start_idx[0], self.start_idx[1], 'yo', markersize = 4)
+        plt.pause(0.1)
 
-
-        #def animate(i):
+        # def animate(i):
         while len(self.stack) != 0:
             # if len(self.stack) == 0:
             #     print("Failed! Couldn't reach ending point!")
             #     ani.event_source.stop()
             self.iterations += 1
-            v = self.stack.pop()
+            v = self.stack.popleft()
             if v == self.start_idx:
-                axs.scatter(v[0], v[1], marker="s", color=self.start_color, s=12)
+                plt.plot(v[0], v[1], 'go',markersize = 3)
             else:
-                axs.scatter(v[0], v[1], marker="s", color=self.lead_color, s=12)
+                plt.plot(v[0], v[1], 'bo',markersize = 3)
             print(v)
             if v == self.goal_idx:
                 print("Success! Reached ending point!")
-                axs.scatter(v[0], v[1], marker="s", color=self.goal_color, s=12)
-                #ani.event_source.stop()
+                plt.plot(v[0], v[1], 'go',markersize = 3)
+                # ani.event_source.stop()
                 break
-            #print(len(self.stack))
+            # print(len(self.stack))
             neighbors = self.collect_neighbors(v,go)
-            #print(neighbors)
+            # print(neighbors)
             for ii in neighbors:
-                #axs.scatter(ii[0], ii[1], color=self.neighbor_color, s=12)
+                # axs.scatter(ii[0], ii[1], color=self.neighbor_color, s=12)
                 if self.not_visited(ii):
                     self.stack.append(ii)
                     self.mark_visited(ii)
-                    axs.scatter(ii[0], ii[1], marker="s", color=self.visited_color, s=12)
-            #print(len(self.stack))
-            #fig.canvas.draw()
-
-        #ani = animation.FuncAnimation(fig, animate, repeat=False, cache_frame_data=False, interval=0)
+                    plt.plot(ii[0], ii[1], 'mo',markersize=3)
+            # fig.canvas.draw()
+            plt.pause(0.0001)
 
         plt.suptitle(str(self.name) + ' - Number of iterations: ' + str(self.iterations))
         plt.show()
-        # To save the animation using Pillow as a gif
-        #writer = animation.PillowWriter(fps=0.5,
-        #                                metadata=dict(artist='Me'),
-        #                               bitrate=1800)
-        #ani.save('grid.gif',writer=writer)
 
-
-        #
-        # for ii in range(len(self.visited)):
-        #     axs.scatter([self.visited[ii][0]], [self.visited[ii][1]], color='blue', s=12)
-        # plt.suptitle(str(self.name) + ' - Number of iterations: ' + str(self.iterations))
-        # plt.show()
 
     def workingDFS(self,go,axs):
-
+        # Backup in case function above breaks
         self.stack.append(self.start_idx)
         #print(len(self.stack))
         self.mark_visited(self.start_idx)

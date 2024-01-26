@@ -9,7 +9,7 @@ def create_line():
     r = np.random.randint(0, 128)   # Get random row index
     c = np.random.randint(0, 128)   # Get random column index
     start_idx = [r, c]              # Create a starting (x,y) index
-    shape_idx = [start_idx]         # Create a shape_idx array to store all subsequent indicies to create the desired shape
+    shape_idx = [tuple(start_idx)]         # Create a shape_idx array to store all subsequent indicies to create the desired shape
     heading = np.random.randint(0, 3)  # Direction where 0 is north, 1 is east, 2 is south, 3 is west
     match heading:
         # Based on the heading direction, create appropriate indices per desired shape
@@ -17,22 +17,22 @@ def create_line():
             for i in range(1, 4):
                 idx = start_idx
                 new_idx = [start_idx[0], start_idx[1] + i]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 1:
             for i in range(1, 4):
                 idx = start_idx
                 new_idx = [start_idx[0] + i, start_idx[1]]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 2:
             for i in range(1, 4):
                 idx = start_idx
                 new_idx = [start_idx[0], start_idx[1] - i]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 3:
             for i in range(1, 4):
                 idx = start_idx
                 new_idx = [start_idx[0] - i, start_idx[1]]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
     return shape_idx
 
 
@@ -43,7 +43,7 @@ def create_l():
     r = np.random.randint(0, 128)
     c = np.random.randint(0, 128)
     start_idx = [r, c]
-    shape_idx = [start_idx]
+    shape_idx = [tuple(start_idx)]
     heading = np.random.randint(0, 3)  # Direction where 0 is north, 1 is east, 2 is south, 3 is west
     match heading:
         case 0:
@@ -53,7 +53,7 @@ def create_l():
                     new_idx = [start_idx[0] - i, start_idx[1]]
                 else:
                     new_idx = [start_idx[0] - 1, start_idx[1] + (i - 1)]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 1:
             for i in range(1, 4):
                 idx = start_idx
@@ -61,7 +61,7 @@ def create_l():
                     new_idx = [start_idx[0], start_idx[1] + i]
                 else:
                     new_idx = [start_idx[0] + (i - 1), start_idx[1] + 1]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 2:
             for i in range(1, 4):
                 idx = start_idx
@@ -69,7 +69,7 @@ def create_l():
                     new_idx = [start_idx[0] + i, start_idx[1]]
                 else:
                     new_idx = [start_idx[0] + 1, start_idx[1] - (i - 1)]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 3:
             for i in range(1, 4):
                 idx = start_idx
@@ -77,7 +77,7 @@ def create_l():
                     new_idx = [start_idx[0], start_idx[1] - i]
                 else:
                     new_idx = [start_idx[0] - (i - 1), start_idx[1] + 1]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
     return shape_idx
 
 
@@ -88,7 +88,7 @@ def create_spark():
     r = np.random.randint(0, 128)
     c = np.random.randint(0, 128)
     start_idx = [r, c]
-    shape_idx = [start_idx]
+    shape_idx = [tuple(start_idx)]
     heading = np.random.randint(0, 3)  # Direction where 0 is north, 1 is east, 2 is south, 3 is west
     match heading:
         case 0:
@@ -100,7 +100,7 @@ def create_spark():
                     new_idx = [start_idx[0] - (i - 1), start_idx[1] + 1]
                 else:
                     new_idx = [start_idx[0] - 1, start_idx[1] + (i - 1)]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 1:
             for i in range(1, 4):
                 idx = start_idx
@@ -110,7 +110,7 @@ def create_spark():
                     new_idx = [start_idx[0] + 1, start_idx[1] + (i - 1)]
                 else:
                     new_idx = [start_idx[0] + (i - 1), start_idx[1] + 1]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 2:
             for i in range(1, 4):
                 idx = start_idx
@@ -120,7 +120,7 @@ def create_spark():
                     new_idx = [start_idx[0] + (i - 1), start_idx[1] - 1]
                 else:
                     new_idx = [start_idx[0] + 1, start_idx[1] - (i - 1)]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 3:
             for i in range(1, 4):
                 idx = start_idx
@@ -130,7 +130,7 @@ def create_spark():
                     new_idx = [start_idx[0] - 1, start_idx[1] - (i - 1)]
                 else:
                     new_idx = [start_idx[0] - (i - 1), start_idx[1] - 1]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
     return shape_idx
 
 
@@ -141,7 +141,7 @@ def create_t():
     r = np.random.randint(0, 128)
     c = np.random.randint(0, 128)
     start_idx = [r, c]
-    shape_idx = [start_idx]
+    shape_idx = [tuple(start_idx)]
     heading = np.random.randint(0, 3)  # Direction where 0 is north, 1 is east, 2 is south, 3 is west
     match heading:
         case 0:
@@ -151,7 +151,7 @@ def create_t():
                     new_idx = [start_idx[0] + 1, start_idx[1] - 1]
                 else:
                     new_idx = [start_idx[0] + i, start_idx[1]]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 1:
             for i in range(1, 4):
                 idx = start_idx
@@ -159,7 +159,7 @@ def create_t():
                     new_idx = [start_idx[0] - 1, start_idx[1] - 1]
                 else:
                     new_idx = [start_idx[0], start_idx[1] - i]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 2:
             for i in range(1, 4):
                 idx = start_idx
@@ -167,7 +167,7 @@ def create_t():
                     new_idx = [start_idx[0] - 1, start_idx[1] + 1]
                 else:
                     new_idx = [start_idx[0] - i, start_idx[1]]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
         case 3:
             for i in range(1, 4):
                 idx = start_idx
@@ -175,7 +175,7 @@ def create_t():
                     new_idx = [start_idx[0] + 1, start_idx[1] + 1]
                 else:
                     new_idx = [start_idx[0], start_idx[1] + i]
-                shape_idx.append(new_idx)
+                shape_idx.append(tuple(new_idx))
     return shape_idx
 
 
