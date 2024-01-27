@@ -3,15 +3,13 @@ import numpy as np
 
 from GridObstacle import GridObstacle
 from ObstacleGenerator import ObstacleGenerator
-from GridSearch import GridSearch
-from GridSearch import Node
-from collections import deque
+
 
 def init_plot():
     # This function initializes the figure object that will contain the obstacle field
     fig, ax = plt.subplots(figsize=(10, 10))                    # Create figure and axis object
-    ax.set_xlim([-2, 130])                                       # Set x limit
-    ax.set_ylim([-2, 130])                                       # Set y limit
+    ax.set_xlim([-2, 130])                                      # Set x limit
+    ax.set_ylim([-2, 130])                                      # Set y limit
     ax.set_yticks(np.arange(0, 128.1, 1), minor=True)           # Assign minor y-axis ticks
     ax.set_yticks(np.arange(0, 128.1, 128 / 8), minor=False)    # Assign major y-axis ticks
     ax.set_xticks(np.arange(0, 128.1, 1), minor=True)           # Assign minor x-axis ticks
@@ -49,38 +47,113 @@ def set_goal_idx(goal_idx,go):
     return tuple(goal_idx)
 
 
-def bfs(search):
-    iterations = 0
-    node = Node(search.initial)
-    if search.goal_test(node.state):
-        print("Success! Goal is found at " + str(node.state))
-        return node, iterations
-    frontier = deque([node])
-    explored = {search.initial}
-    while frontier:
-        node = frontier.pop()
-        iterations += 1
-        if node.state == search.initial:
-            plt.plot(node.state[0], node.state[1], 'bs', markersize=4)
-        elif search.goal_test(node.state):
-            print('Success! Reached the goal state of ' + str(search.goal))
-            plt.pause(0.001)
-            plt.plot(node.state[0], node.state[1], 'rs', markersize=4)
-            plt.pause(0.001)
-            return node, iterations
-        else:
-            plt.plot(node.state[0], node.state[1], 'gs', markersize=4)
-        for child in node.expand(search):
-            s = child.state
-            if s not in explored:
-                explored.add(s)
-                plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
-                frontier.appendleft(child)
-        if iterations % 500 == 0:
-            plt.pause(0.001)
-    print('Failed to find goal')
-    return None, iterations
+# def bfs(search):
+#     iterations = 0
+#     node = Node(search.initial)
+#     if search.goal_test(node.state):
+#         print("Success! Goal is found at " + str(node.state))
+#         return node, iterations
+#     frontier = deque([node])
+#     explored = {search.initial}
+#     while frontier:
+#         node = frontier.pop()
+#         iterations += 1
+#         if node.state == search.initial:
+#             plt.plot(node.state[0], node.state[1], 'bs', markersize=4)
+#         elif search.goal_test(node.state):
+#             print('Success! Reached the goal state of ' + str(search.goal))
+#             plt.pause(0.001)
+#             plt.plot(node.state[0], node.state[1], 'rs', markersize=4)
+#             plt.pause(0.001)
+#             return node, iterations
+#         else:
+#             plt.plot(node.state[0], node.state[1], 'gs', markersize=4)
+#         for child in node.expand(search):
+#             s = child.state
+#             if s not in explored:
+#                 explored.add(s)
+#                 plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
+#                 frontier.appendleft(child)
+#         if iterations % 500 == 0:
+#             plt.pause(0.01)
+#             plt.suptitle(str('Breadth First Search') + ' - Number of iterations: ' + str(iterations))
+#     print('Failed to find goal.')
+#     return None, iterations
 
+# def dfs(search):
+#     iterations = 0
+#     node = Node(search.initial)
+#     if search.goal_test(node.state):
+#         print("Success! Goal is found at " + str(node.state))
+#         return node, iterations
+#     frontier = deque([node])
+#     explored = {search.initial}
+#     while frontier:
+#         node = frontier.pop()
+#         iterations += 1
+#         if node.state == search.initial:
+#             plt.plot(node.state[0], node.state[1], 'bs', markersize=4)
+#         elif search.goal_test(node.state):
+#             print('Success! Reached the goal state of ' + str(search.goal))
+#             plt.pause(0.001)
+#             plt.plot(node.state[0], node.state[1], 'rs', markersize=4)
+#             plt.pause(0.001)
+#             return node, iterations
+#         else:
+#             plt.plot(node.state[0], node.state[1], 'gs', markersize=4)
+#         for child in node.expand(search):
+#             s = child.state
+#             if s not in explored:
+#                 explored.add(s)
+#                 plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
+#                 frontier.append(child)
+#         if iterations % 500 == 0:
+#             plt.pause(0.01)
+#             plt.suptitle(str('Breadth First Search') + ' - Number of iterations: ' + str(iterations))
+#     print('Failed to find goal.')
+#     return None, iterations
+
+# def dijkstra(search):
+#     iterations = 0
+#     node = Node(search.initial,path_cost=0)
+#     if search.goal_test(node.state):
+#         print("Success! Goal is found at " + str(node.state))
+#         return node, iterations
+#     frontier = deque([node])
+#     explored = {search.initial}
+#     while frontier:
+#         node = frontier.pop()
+#         iterations += 1
+#         if node.state == search.initial:
+#             plt.plot(node.state[0], node.state[1], 'bs', markersize=4)
+#         elif search.goal_test(node.state):
+#             print('Success! Reached the goal state of ' + str(search.goal))
+#             plt.pause(0.001)
+#             plt.plot(node.state[0], node.state[1], 'rs', markersize=4)
+#             plt.pause(0.001)
+#             return node, iterations
+#         else:
+#             plt.plot(node.state[0], node.state[1], 'gs', markersize=4)
+#         for child in node.expand(search):
+#             s = child.state
+#             if s not in explored:
+#                 explored.add(s)
+#                 plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
+#                 child.path_cost = 1
+#                 frontier.appendleft(child)
+#         if iterations % 500 == 0:
+#             plt.pause(0.01)
+#             plt.suptitle(str('Breadth First Search') + ' - Number of iterations: ' + str(iterations))
+#     print('Failed to find goal.')
+#     return None, iterations
+
+def generateObstacleField(rate):
+    # Main function to run the script
+    go = GridObstacle([])                               # Create a GridObstacle object
+    obstacle_gen = ObstacleGenerator([],rate)   # Create a ObstacleGenerator object. Initialize with coverage rate
+    num_obstacles = obstacle_gen.obstacle_coverage()        # Get number of obstacles based on coverage rate
+    go = obstacle_gen.generate_obstacles(go,num_obstacles)  # Generate the obstacles based on the amount required
+    return go, rate
 
 def main():
     # Main function to run the script
@@ -94,11 +167,27 @@ def main():
     goal = set_goal_idx((128,0),go)
     obstacles = go.get_obstacles()
     gridsearch = GridSearch(start, obstacles, goal)
+    plt.title('Obstacle Field\nCoverage rate of ' + str(obstacle_gen.rate) + '%')  # Add plot title
     plt.plot(gridsearch.initial[0], gridsearch.initial[1], 'bs', markersize=4)
     plt.plot(gridsearch.goal[0], gridsearch.goal[1], 'rs',markersize=4)
     plt.pause(1)
-    answer, iterations = bfs(gridsearch)
-    answer.solution(str('Breadth First Search'),str(obstacle_gen.rate),iterations)
+
+
+    algorithm = 'dijkstra'
+    match algorithm:
+        case 'dfs':
+            name = 'Depth First Search'
+            answer, iterations = dfs(gridsearch)
+        case 'bfs':
+            name = 'Breadth First Search'
+            answer, iterations = bfs(gridsearch)
+        case 'dijkstra':
+            name = 'Dijkstra Search'
+            answer, iterations = dijkstra(gridsearch)
+    try:
+        answer.solution(name,str(obstacle_gen.rate),iterations)
+    except AttributeError:
+        print('No solution present.')
     plt.show()
 
 
