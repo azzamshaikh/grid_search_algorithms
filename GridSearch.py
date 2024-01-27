@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 def out_of_bound(idx):
     # Static function to check if the indices for the neighbors are valid
     if 0 <= idx[0] <= 128 and 0 <= idx[1] <= 128:
@@ -11,15 +12,11 @@ def out_of_bound(idx):
 
 def is_obstacle(idx,grid):
     # Function to check if a cell is an obstacle or not
-    #print(grid)
-    #print(idx)
-
     if idx in grid:
-        #print('true')
         return True
     else:
-        #print('false')
         return False
+
 
 class GridSearch:
 
@@ -31,7 +28,6 @@ class GridSearch:
     def action(self,state):
         possible_actions = ['Up','Left','Down','Right']
         x,y = state[0], state[1]
-
         # add logic to prevent obstacle and bound collisions
         if out_of_bound((x,y+1)) or is_obstacle((x,y+1),self.obs):
             if 'Up' in possible_actions:
@@ -45,7 +41,6 @@ class GridSearch:
         if out_of_bound((x+1,y)) or is_obstacle((x+1,y),self.obs):
             if 'Right' in possible_actions:
                 possible_actions.remove('Right')
-
         return possible_actions
 
 
@@ -53,29 +48,24 @@ class GridSearch:
         x = state[0]
         y = state[1]
         possible_location = list()
-
-        # Move Up
         if action == 'Up':
             possible_location = (x,y+1)
-
         elif action == 'Left':
             possible_location = (x-1,y)
-
         elif action == 'Down':
             possible_location = (x,y-1)
-
         elif action == 'Right':
             possible_location = (x+1,y)
-
         state = possible_location
-
         return state
+
 
     def goal_test(self, state):
         if state == self.goal:
             return True
         else:
             return False
+
 
 class Node:
 
