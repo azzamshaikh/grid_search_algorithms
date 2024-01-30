@@ -1,33 +1,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import random
-
-from GridObstacle import GridObstacle
-from ObstacleGenerator import ObstacleGenerator
-from GridSearch import GridSearch
-from GridSearch import Node
 from collections import deque
+
 
 def out_of_bound(idx):
     # Static function to check if the indices for the neighbors are valid
     if 0 <= idx[0] <= 128 and 0 <= idx[1] <= 128:
         return False
     else:
-        #print("The following neighbor at " + str(idx) + " is out of bounds.")
         return True
 
 
 def is_obstacle(idx,grid):
     # Function to check if a cell is an obstacle or not
-    #print(grid)
-    #print(idx)
-
     if idx in grid:
-        #print('true')
         return True
     else:
-        #print('false')
         return False
+
 
 class GridSearch:
 
@@ -84,6 +75,7 @@ class GridSearch:
         else:
             return False
 
+
 class Node:
 
     def __init__(self,state,parent=None,action=None,path_cost = 0):
@@ -112,10 +104,6 @@ class Node:
             plt.plot(node.state[0], node.state[1], 'ms', markersize=3)
             path_back.append(node)
             node = node.parent
-        plt.title('Obstacle Field\nCoverage rate of ' + coverage_rate + '%')  # Add plot title
-        plt.suptitle(algo_name + ' - Number of iterations: ' + str(iterations))
-        plt.pause(0.01)
-
         return list(reversed(path_back))
 
     def __hash__(self):
@@ -124,9 +112,9 @@ class Node:
 
 class GridSearchRandom:
 
-    name = 'Breadth First Search'
+    name = 'Random Search'
 
-    def random(search):
+    def random(search: GridSearch):
         iterations = 0
         node = Node(search.initial)
         if search.goal_test(node.state):
@@ -158,7 +146,6 @@ class GridSearchRandom:
                 plt.suptitle(GridSearchRandom.name + ' - Number of iterations: ' + str(iterations))
         print('Failed to find goal.')
         return None, iterations
-
 
 
 def init_plot():
@@ -216,6 +203,9 @@ def runRandom(go,startidx,goalidx,rate):
     answer, iterations = GridSearchRandom.random(gridsearch)
     try:
         answer.solution(GridSearchRandom.name,str(rate),iterations)
+        plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
+        plt.suptitle(GridSearchRandom.name + ' - Number of iterations: ' + str(iterations))
+        plt.pause(0.01)
     except AttributeError:
         print('No solution present.')
     plt.show(block=False)

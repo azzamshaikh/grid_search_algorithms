@@ -1,39 +1,32 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
-from GridObstacle import GridObstacle
-from ObstacleGenerator import ObstacleGenerator
 from collections import deque
+
 
 def out_of_bound(idx):
     # Static function to check if the indices for the neighbors are valid
     if 0 <= idx[0] <= 128 and 0 <= idx[1] <= 128:
         return False
     else:
-        #print("The following neighbor at " + str(idx) + " is out of bounds.")
         return True
 
 
-def is_obstacle(idx,grid):
+def is_obstacle(idx, grid):
     # Function to check if a cell is an obstacle or not
-    #print(grid)
-    #print(idx)
-
     if idx in grid:
-        #print('true')
         return True
     else:
-        #print('false')
         return False
+
 
 class GridSearch:
 
-    def __init__(self,initial,obs,goal=None):
+    def __init__(self, initial, obs, goal=None):
         self.initial = initial
         self.obs = obs
         self.goal = goal
 
-    def action(self,state):
+    def action(self, state):
         possible_actions = ['Up','Left','Down','Right']
         x,y = state[0], state[1]
 
@@ -81,6 +74,7 @@ class GridSearch:
         else:
             return False
 
+
 class Node:
 
     def __init__(self,state,parent=None,action=None,path_cost = 0):
@@ -109,10 +103,6 @@ class Node:
             plt.plot(node.state[0], node.state[1], 'ms', markersize=3)
             path_back.append(node)
             node = node.parent
-        plt.title('Obstacle Field\nCoverage rate of ' + coverage_rate + '%')  # Add plot title
-        plt.suptitle(algo_name + ' - Number of iterations: ' + str(iterations))
-        plt.pause(0.01)
-
         return list(reversed(path_back))
 
     def __hash__(self):
@@ -121,9 +111,9 @@ class Node:
 
 class GridSearchDFS:
 
-    name = 'Breadth First Search'
+    name = 'Depth First Search'
 
-    def dfs(search):
+    def dfs(search: GridSearch):
         iterations = 0
         node = Node(search.initial)
         if search.goal_test(node.state):
@@ -155,7 +145,6 @@ class GridSearchDFS:
                 plt.suptitle(GridSearchDFS.name + ' - Number of iterations: ' + str(iterations))
         print('Failed to find goal.')
         return None, iterations
-
 
 
 def init_plot():
@@ -213,6 +202,9 @@ def runDFS(go,startidx,goalidx,rate):
     answer, iterations = GridSearchDFS.dfs(gridsearch)
     try:
         answer.solution(GridSearchDFS.name,str(rate),iterations)
+        plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
+        plt.suptitle(GridSearchDFS.name + ' - Number of iterations: ' + str(iterations))
+        plt.pause(0.01)
     except AttributeError:
         print('No solution present.')
     plt.show(block=False)

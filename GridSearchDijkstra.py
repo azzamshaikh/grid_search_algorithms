@@ -1,19 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
-from GridObstacle import GridObstacle
-from ObstacleGenerator import ObstacleGenerator
-from GridSearch import GridSearch
-from GridSearch import Node
-import heapq
 from queue import PriorityQueue
+from itertools import count
+
 
 def out_of_bound(idx):
     # Static function to check if the indices for the neighbors are valid
     if 0 <= idx[0] <= 128 and 0 <= idx[1] <= 128:
         return False
     else:
-        #print("The following neighbor at " + str(idx) + " is out of bounds.")
         return True
 
 
@@ -27,13 +22,17 @@ def is_obstacle(idx,grid):
 
 class GridSearch:
 
-    def __init__(self,initial,obs,goal=None):
+    def __init__(self,initial,obs,goal=None, diagonal_enable = False):
         self.initial = initial
         self.obs = obs
         self.goal = goal
+        self.diagonal_enable = diagonal_enable
 
     def action(self,state):
-        possible_actions = ['Up','UpLeft','Left','DownLeft','Down','DownRight','Right','UpRight']
+        if self.diagonal_enable:
+            possible_actions = ['Up', 'UpLeft', 'Left', 'DownLeft', 'Down', 'DownRight', 'Right', 'UpRight']
+        else:
+            possible_actions = ['Up', 'Left', 'Down', 'Right']
         x,y = state[0], state[1]
 
         # add logic to prevent obstacle and bound collisions
@@ -104,6 +103,38 @@ class GridSearch:
         else:
             return False
 
+    def path_cost(self,action):
+        cost = 0
+        if self.diagonal_enable:
+            if action == 'Up':
+                cost = 1
+            elif action == 'UpLeft':
+                cost = 1
+            elif action == 'Left':
+                cost = 1
+            elif action == 'DownLeft':
+                cost = 1
+            elif action == 'Down':
+                cost = 1
+            elif action == 'DownRight':
+                cost = 1
+            elif action == 'Right':
+                cost = 1
+            elif action == 'UpRight':
+                cost = 1
+            return cost
+        else:
+            if action == 'Up':
+                cost = 1
+            elif action == 'Left':
+                cost = 1
+            elif action == 'Down':
+                cost = 1
+            elif action == 'Right':
+                cost = 1
+            return cost
+
+
 class Node:
 
     def __init__(self,state,parent=None,action=None,path_cost = 0):
@@ -124,6 +155,7 @@ class Node:
     def child_node(self,search,action):
         next_state = search.result(self.state,action)
         next_node = Node(next_state,self,action)
+        next_node.path_cost = search.path_cost(action)
         return next_node
 
     def solution(self,algo_name,coverage_rate,iterations):
@@ -135,31 +167,25 @@ class Node:
             plt.plot(node.state[0], node.state[1], 'ms', markersize=3)
             path_back.append(node)
             node = node.parent
-        plt.title('Obstacle Field\nCoverage rate of ' + coverage_rate + '%')  # Add plot title
-        plt.suptitle(algo_name + ' - Number of iterations: ' + str(iterations))
-        plt.pause(0.01)
-
         return list(reversed(path_back))
-
-    def __hash__(self):
-        return hash(self.state)
 
 
 class GridSearchDijkstra:
 
     name = 'Dijkstra Search'
 
-    def dijkstra(search):
+    def dijkstra(search: GridSearch):
         iterations = 0
         node = Node(search.initial)
         if search.goal_test(node.state):
             print("Success! Goal is found at " + str(node.state))
             return node, iterations
         frontier = PriorityQueue()
-        frontier.put((node.path_cost,node))
+        unique = count()
+        frontier.put((node.path_cost, next(unique), node))
         explored = {search.initial}
         while frontier:
-            cost,node = frontier.get()
+            cost,not_used,node = frontier.get()
             iterations += 1
             if node.state == search.initial:
                 plt.plot(node.state[0], node.state[1], 'bs', markersize=4)
@@ -177,7 +203,7 @@ class GridSearchDijkstra:
                     explored.add(s)
                     plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
                     child.path_cost = cost + 1
-                    frontier.put((child.path_cost,child))
+                    frontier.put((child.path_cost,next(unique),child))
             if iterations % 750 == 0:
                 plt.pause(0.01)
                 plt.suptitle(GridSearchDijkstra.name + ' - Number of iterations: ' + str(iterations))
@@ -227,20 +253,22 @@ def set_goal_idx(goal_idx,go):
     return tuple(goal_idx)
 
 
-def runDijkstra(go,startidx,goalidx,rate):
+def runDijkstra(go,startidx,goalidx,rate,diagonal_enable):
     init_plot()
     plot_obstacles(go)
     start = set_starting_idx(startidx,go)
     goal = set_goal_idx(goalidx,go)
-    gridsearch = GridSearch(start,go.get_obstacles(),goal)
+    gridsearch = GridSearch(start,go.get_obstacles(),goal,diagonal_enable)
     plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
     plt.plot(gridsearch.initial[0], gridsearch.initial[1], 'bs', markersize=4)
     plt.plot(gridsearch.goal[0], gridsearch.goal[1], 'rs', markersize=4)
     plt.pause(1)
     answer, iterations = GridSearchDijkstra.dijkstra(gridsearch)
-    #print(answer.path_cost)
     try:
         answer.solution(GridSearchDijkstra.name,str(rate),iterations)
+        plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
+        plt.suptitle(GridSearchDijkstra.name + ' - Number of iterations: ' + str(iterations))
+        plt.pause(0.01)
     except AttributeError:
         print('No solution present.')
     plt.show(block=False)
