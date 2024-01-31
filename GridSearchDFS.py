@@ -20,55 +20,63 @@ def is_obstacle(idx, grid):
 
 
 class GridSearch:
+    # GridSearch class is an agent to execute the grid search problem. It contains the information about the
+    # initial and goal states, its possible actions, the results of its actions, if it has reached its goal,
+    # and any path costs.
 
     def __init__(self, initial, obs, goal=None):
+        # Initialization of GridSearch object
         self.initial = initial
         self.obs = obs
         self.goal = goal
 
     def action(self, state):
-        possible_actions = ['Up','Left','Down','Right']
-        x,y = state[0], state[1]
+        # Determine any possible actions based on the current state
+
+        possible_actions = ['Up', 'Left', 'Down', 'Right']
+        x, y = state[0], state[1]
 
         # add logic to prevent obstacle and bound collisions
-        if out_of_bound((x,y+1)) or is_obstacle((x,y+1),self.obs):
+        if out_of_bound((x, y+1)) or is_obstacle((x, y+1), self.obs):
             if 'Up' in possible_actions:
                 possible_actions.remove('Up')
-        if out_of_bound((x-1,y)) or is_obstacle((x-1,y),self.obs):
+        if out_of_bound((x-1, y)) or is_obstacle((x-1, y), self.obs):
             if 'Left' in possible_actions:
                 possible_actions.remove('Left')
-        if out_of_bound((x,y-1)) or is_obstacle((x,y-1),self.obs):
+        if out_of_bound((x, y-1)) or is_obstacle((x, y-1), self.obs):
             if 'Down' in possible_actions:
                 possible_actions.remove('Down')
-        if out_of_bound((x+1,y)) or is_obstacle((x+1,y),self.obs):
+        if out_of_bound((x+1, y)) or is_obstacle((x+1, y), self.obs):
             if 'Right' in possible_actions:
                 possible_actions.remove('Right')
 
         return possible_actions
 
-    def result(self,state,action):
+    def result(self, state, action):
+        # Return the resulting new state from the action applied to the current state
         x = state[0]
         y = state[1]
         possible_location = list()
 
         # Move Up
         if action == 'Up':
-            possible_location = (x,y+1)
+            possible_location = (x, y+1)
 
         elif action == 'Left':
-            possible_location = (x-1,y)
+            possible_location = (x-1, y)
 
         elif action == 'Down':
-            possible_location = (x,y-1)
+            possible_location = (x, y-1)
 
         elif action == 'Right':
-            possible_location = (x+1,y)
+            possible_location = (x+1, y)
 
         state = possible_location
 
         return state
 
     def goal_test(self, state):
+        # Test to see if the current state is the goal state
         if state == self.goal:
             return True
         else:
@@ -76,8 +84,9 @@ class GridSearch:
 
 
 class Node:
+    # The Node class contains the information about each node/cell that the GridSearch algorithm traverses
 
-    def __init__(self,state,parent=None,action=None,path_cost = 0):
+    def __init__(self, state, parent=None, action=None, path_cost=0):
         self.state = state
         self.parent = parent
         self.action = action
@@ -86,18 +95,22 @@ class Node:
         if parent:
             self.depth = parent.depth + 1
 
-    def expand(self,search):
+    def expand(self, search):
+        # Search neighboring cells
         return [self.child_node(search, action) for action in search.action(self.state)]
 
-    def child_node(self,search,action):
-        next_state = search.result(self.state,action)
-        next_node = Node(next_state,self,action)
+    def child_node(self, search, action):
+        # Obtain the child node of the current cell
+        next_state = search.result(self.state, action)
+        next_node = Node(next_state, self, action)
         return next_node
 
-    def solution(self,algo_name,coverage_rate,iterations):
-        return [node.action for node in self.path(algo_name,coverage_rate,iterations)[1:]]
+    def solution(self):
+        # Return the solution of the path
+        return [node.action for node in self.path()[1:]]
 
-    def path(self,algo_name,coverage_rate,iterations):
+    def path(self):
+        # Obtain the path back
         node, path_back = self, []
         while node:
             plt.plot(node.state[0], node.state[1], 'ms', markersize=3)
@@ -105,11 +118,9 @@ class Node:
             node = node.parent
         return list(reversed(path_back))
 
-    def __hash__(self):
-        return hash(self.state)
-
 
 class GridSearchDFS:
+    # GridSearchDFS class that executes the DFS grid search
 
     name = 'Depth First Search'
 
@@ -165,52 +176,49 @@ def plot_obstacles(go):
         plt.plot(ii[0], ii[1], 'sk', markersize=4)      # Plot obstacle
 
 
-def set_starting_idx(start_idx,go):
+def set_starting_idx(start_idx, go):
+    # Set the starting position for the grid. If an obstacle is present, move to another cell.
     start_idx = list(start_idx)
     print("Checking if the following start idx " + str(start_idx) + " is an obstacle.")
     if go.is_obstacle(start_idx):
         print("It is an obstacle. Updating the array")
         start_idx[0] = start_idx[0] + 1
-        set_starting_idx(start_idx,go)
+        set_starting_idx(start_idx, go)
     else:
         print("The starting index of " + str(start_idx) + " is valid! Starting at this point!")
     return tuple(start_idx)
 
 
-def set_goal_idx(goal_idx,go):
+def set_goal_idx(goal_idx, go):
+    # Set the goal position for the grid. If an obstacle is present, move to another cell.
     goal_idx = list(goal_idx)
     print("Checking if the following goal idx " + str(goal_idx) + " is an obstacle.")
     if go.is_obstacle(goal_idx):
         print("It is an obstacle. Updating the array")
         goal_idx[0] = goal_idx[0] - 1
-        set_goal_idx(goal_idx,go)
+        set_goal_idx(goal_idx, go)
     else:
         print("The goal index of " + str(goal_idx) + " is valid! Ending at this point!")
     return tuple(goal_idx)
 
 
-def runDFS(go,startidx,goalidx,rate):
+def runDFS(go, startidx, goalidx, rate):
+    # Run the DFS algorithm
     init_plot()
     plot_obstacles(go)
-    start = set_starting_idx(startidx,go)
-    goal = set_goal_idx(goalidx,go)
-    gridsearch = GridSearch(start,go.get_obstacles(),goal)
+    start = set_starting_idx(startidx, go)
+    goal = set_goal_idx(goalidx, go)
+    gridsearch = GridSearch(start, go.get_obstacles(), goal)
     plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
     plt.plot(gridsearch.initial[0], gridsearch.initial[1], 'bs', markersize=4)
     plt.plot(gridsearch.goal[0], gridsearch.goal[1], 'rs', markersize=4)
     plt.pause(1)
     answer, iterations = GridSearchDFS.dfs(gridsearch)
     try:
-        answer.solution(GridSearchDFS.name,str(rate),iterations)
+        answer.solution()
         plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
         plt.suptitle(GridSearchDFS.name + ' - Number of iterations: ' + str(iterations))
         plt.pause(0.01)
     except AttributeError:
         print('No solution present.')
     plt.show(block=False)
-
-
-
-
-
-

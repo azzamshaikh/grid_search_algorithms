@@ -12,7 +12,7 @@ def in_bound(idx):
 class GridObstacle:
     # This class stores the master list of all obstacle objects
 
-    def __init__(self,obstacles):
+    def __init__(self, obstacles):
         # Class constructor
         self.obstacles = obstacles
 
@@ -28,14 +28,12 @@ class GridObstacle:
         # Getter method to return number of obstacles
         return len(self.obstacles)
 
-    def is_obstacle(self,idx):
+    def is_obstacle(self, idx):
         # Function to check if a cell is an obstacle or not
-        grid = self.get_obstacles() # Gets the master list of obstacles
+        grid = self.get_obstacles()  # Gets the master list of obstacles
         if idx in grid:
-            #print('true')
             return True
         else:
-            #print('false')
             return False
 
     def add_custom_obs(self, idx):
@@ -43,12 +41,12 @@ class GridObstacle:
         # Used for checking if planner start point function is working
         self.obstacles.append(idx)
 
-    def check_collision_and_add(self,idx):
+    def check_collision_and_add(self, idx):
         # This function checks if certain obstacles (individual cells) already exist. If they exist, they do not get
         # duplicated to the list
-        grid = self.get_obstacles() # Gets the master list of obstacles
-        for obs in idx:             # Loop through new obstacles (a single (x,y) pair)
-            if in_bound(obs):       # Only move forward if x,y pair are within grid bounds
+        grid = self.get_obstacles()  # Gets the master list of obstacles
+        for obs in idx:              # Loop through new obstacles (a single (x,y) pair)
+            if in_bound(obs):        # Only move forward if x,y pair are within grid bounds
                 # If the x,y pair is not already in the grid, add it. Otherwise, don't.
                 if obs not in grid:
                     self.obstacles.append(obs)

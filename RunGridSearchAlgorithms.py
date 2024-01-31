@@ -7,12 +7,24 @@ from GridSearchDijkstra import runDijkstra
 
 
 def main():
-    go, rate = generateObstacleField(50)
-    #runBFS(go,(0,128),(128,0),rate)
-    #runDFS(go,(0,128),(128,0),rate)
-    #runDijkstra(go, (0, 128), (128, 0), rate, False)
+    # Main function to run planners
+    go, rate = generateObstacleField(50)        # Create obstacle field objects at a preset density
+
+    # Run BFS
+    runBFS(go, (0, 128), (128, 0), rate)
+
+    # Run DFS
+    runDFS(go, (0, 128), (128, 0), rate)
+
+    # Run Dijkstra's without diagonal moves
+    runDijkstra(go, (0, 128), (128, 0), rate, False)
+
+    # Run Dijkstra's with diagonal moves
     runDijkstra(go, (0, 128), (128, 0), rate, True)
-    # runRandom(go,(0,128),(128,0),rate)
+
+    # Run Random planner
+    # runRandom(go, (0, 128), (128, 0), rate)
+
     plt.show()
 
 
