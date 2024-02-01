@@ -22,3 +22,5 @@ To run the code, download this repository and run the RunGridSearchAlgorithms.py
 The obstacle field density can also be changed. In the RunGridSearchAlgorithms.py, the argument in the following function below defines the obstacle density:
 
 `go, rate = generateObstacleField(50)`
+
+In the case above, 50 refers to the filling 50% of the obstacle field. 
