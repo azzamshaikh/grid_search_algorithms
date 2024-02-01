@@ -18,3 +18,7 @@ Below are a few GIFs of breadth first search, depth first search, and Dijkstra's
 ## Running Code
 
 To run the code, download this repository and run the RunGridSearchAlgorithms.py file.
+
+The obstacle field density can also be changed. In the RunGridSearchAlgorithms.py, the argument in the following function below defines the obstacle density:
+
+`go, rate = generateObstacleField(50)`
