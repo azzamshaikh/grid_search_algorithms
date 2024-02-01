@@ -15,7 +15,7 @@ Below are a few GIFs of breadth first search, depth first search, and Dijkstra's
 
 ![](./media/Dijkstra.gif)
 
-## Running Code
+## Running the Code
 
 To run the code, download this repository and run the RunGridSearchAlgorithms.py file.
 
