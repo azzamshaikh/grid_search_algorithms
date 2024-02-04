@@ -151,7 +151,7 @@ class GridSearchDFS:
                     explored.add(s)
                     plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
                     frontier.append(child)
-            if iterations % 750 == 0:
+            if iterations % 50 == 0:
                 plt.pause(0.01)
                 plt.suptitle(GridSearchDFS.name + ' - Number of iterations: ' + str(iterations))
         print('Failed to find goal.')
