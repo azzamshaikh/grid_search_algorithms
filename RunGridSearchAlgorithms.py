@@ -24,29 +24,33 @@ def main():
     # Main function to run planners
     go, rate = generateObstacleField(50)        # Create obstacle field objects at a preset density
 
-    plotdata = []
+    plot_data = []
+
+    start_idx = (0, 128)
+    goal_idx = (10, 100)
+
     # Run BFS
-    bfs_data = runBFS(go, (0, 128), (128, 0), rate)
-    plotdata.append(bfs_data)
+    bfs_data = runBFS(go, start_idx, goal_idx, rate)
+    plot_data.append(bfs_data)
 
     # Run DFS
-    dfs_data = runDFS(go, (0, 128), (128, 0), rate)
-    plotdata.append(dfs_data)
+    dfs_data = runDFS(go, start_idx, goal_idx, rate)
+    plot_data.append(dfs_data)
 
     # Run Dijkstra's without diagonal moves
-    dijkstra_data = runDijkstra(go, (0, 128), (128, 0), rate, False)
-    plotdata.append(dijkstra_data)
+    dijkstra_data = runDijkstra(go, start_idx, goal_idx, rate, False)
+    plot_data.append(dijkstra_data)
 
     # Run Dijkstra's with diagonal moves
-    dijkstra_dia_data = runDijkstra(go, (0, 128), (128, 0), rate, True)
-    plotdata.append(dijkstra_dia_data)
+    dijkstra_dia_data = runDijkstra(go, start_idx, goal_idx, rate, True)
+    plot_data.append(dijkstra_dia_data)
 
     # Run Random planner
-    rnd_data = runRandom(go, (0, 128), (128, 0), rate)
-    plotdata.append(rnd_data)
+    # rnd_data = runRandom(go, (0, 128), (128, 0), rate)
+    # plot_data.append(rnd_data)
 
     # Create an iteration vs time performance plot
-    plot_iteration_vs_time(plotdata,rate)
+    plot_iteration_vs_time(plot_data,rate)
 
 
 if __name__ == "__main__":
