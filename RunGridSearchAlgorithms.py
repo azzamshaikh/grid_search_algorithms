@@ -45,13 +45,10 @@ def plot_iteration_vs_density(algorithm_data):
             ax.plot(data[0], iterations[1], marker = 'o', color=color_select(iterations[2]), label=iterations[2])
     plt.suptitle('Performance plot comparing number of iterations versus obstacle density')
     plt.legend()
-    plt.show()
+    plt.show(block=False)
 
 
-def main():
-    # Main function to run planners
-
-    densities = [25, 50, 75]
+def run_multiple_densities(densities):
     num_iterations = list()
 
     for d in densities:
@@ -88,8 +85,53 @@ def main():
         num_iterations.append((d, plot_data))
 
     plot_iteration_vs_density(num_iterations)
+    plt.show()
 
 
+def run_one_density(density):
+    go, rate = generateObstacleField(density)  # Create obstacle field objects at a preset density
+
+    plot_data = []
+
+    start_idx = (0, 128)
+    goal_idx = (128, 0)
+
+    # Run BFS
+    bfs_data = runBFS(go, start_idx, goal_idx, rate)
+    plot_data.append(bfs_data)
+
+    # Run DFS
+    dfs_data = runDFS(go, start_idx, goal_idx, rate)
+    plot_data.append(dfs_data)
+
+    # Run Dijkstra's without diagonal moves
+    dijkstra_data = runDijkstra(go, start_idx, goal_idx, rate, False)
+    plot_data.append(dijkstra_data)
+
+    # Run Dijkstra's with diagonal moves
+    dijkstra_dia_data = runDijkstra(go, start_idx, goal_idx, rate, True)
+    plot_data.append(dijkstra_dia_data)
+
+    # Run Random planner
+    rnd_data = runRandom(go, (0, 128), (128, 0), rate)
+    plot_data.append(rnd_data)
+
+    # Create an iteration vs time performance plot
+    plot_iteration_vs_time(plot_data, rate)
+    plt.show()
+
+
+def main():
+    # Main function to run planners
+
+    # By default, the planners will be run once.
+
+    # run_one_density(50)
+
+    # If multiple densities are to be run, comment out above and uncomment below, then run.
+
+    densities = [25, 50, 75]
+    run_multiple_densities(densities)
 
 
 if __name__ == "__main__":
