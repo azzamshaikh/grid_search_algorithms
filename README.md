@@ -26,10 +26,16 @@ python RunGridSearchAlgorithms.py
 ```
 If an IDE is preferred, such as PyCharm, open the RunGridSearchAlgorithms.py and run the file. 
 
-The different search algorithms can be toggled on and off by commenting the different lines. It is recommended to not run the random planner due to the time required to complete the search.  
+There are two approaches that the user can run the code. If it is desired to run each planner once, this will occur by default. 
 
-The obstacle field density can also be changed. In the RunGridSearchAlgorithms.py, the argument in the following function below defines the obstacle density:
+A custom density can also be added in the RunGridSearchAlgorithms.py file. 
 
-`go, rate = generateObstacleField(50)`
+The density can be input as shown below. The number should be from 0 to 100. The units for the number is %.
+
+`run_one_density(50)`
 
 In the case above, 50 refers to the filling 50% of the obstacle field. 
+
+If it is desired to run multiple densities, the code in the RunGridSearchAlgorithms.py needs to be modified. Please refer to the instructions provided in the code. 
+
+It should be noted that, while the random planner can be run, due to the length required to find a solution, a max iteration limit has been set. Thus, it will always fail in finding a goal.

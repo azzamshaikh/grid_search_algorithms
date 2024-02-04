@@ -126,12 +126,12 @@ def main():
 
     # By default, the planners will be run once.
 
-    # run_one_density(50)
+    run_one_density(50)
 
     # If multiple densities are to be run, comment out above and uncomment below, then run.
 
-    densities = [25, 50, 75]
-    run_multiple_densities(densities)
+    # densities = [25, 50, 75]
+    # run_multiple_densities(densities)
 
 
 if __name__ == "__main__":
