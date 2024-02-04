@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from queue import PriorityQueue
 from itertools import count
+import time
 
 
 def out_of_bound(idx):
@@ -193,20 +194,22 @@ class GridSearchDijkstra:
             self.name = 'Dijkstra Search with Diagonal'
         else:
             self.name = 'Dijkstra Search'
+        self.iterations = 0
+        self.duration = 0
 
     def dijkstra(self, search: GridSearch):
-        iterations = 0
+        t0 = time.time()
         node = Node(search.initial)
         if search.goal_test(node.state):
             print("Success! Goal is found at " + str(node.state))
-            return node, iterations
+            return node
         frontier = PriorityQueue()
         unique = count()
         frontier.put((node.path_cost, next(unique), node))
         explored = {search.initial}
         while frontier:
             cost, not_used, node = frontier.get()
-            iterations += 1
+            self.iterations += 1
             if node.state == search.initial:
                 plt.plot(node.state[0], node.state[1], 'bs', markersize=4)
             elif search.goal_test(node.state):
@@ -214,7 +217,9 @@ class GridSearchDijkstra:
                 plt.pause(0.001)
                 plt.plot(node.state[0], node.state[1], 'rs', markersize=4)
                 plt.pause(0.001)
-                return node, iterations
+                t1 = time.time()
+                self.duration = t1-t0
+                return node
             else:
                 plt.plot(node.state[0], node.state[1], 'gs', markersize=4)
             for child in node.expand(search):
@@ -224,11 +229,13 @@ class GridSearchDijkstra:
                     plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
                     child.path_cost = cost + 1
                     frontier.put((child.path_cost, next(unique), child))
-            if iterations % 750 == 0:
+            if self.iterations % 750 == 0:
                 plt.pause(0.01)
-                plt.suptitle(self.name + ' - Number of iterations: ' + str(iterations))
+                plt.suptitle(self.name + ' - Number of iterations: ' + str(self.iterations))
+        t1 = time.time()
+        self.duration = t1 - t0
         print('Failed to find goal.')
-        return None, iterations
+        return None
 
 
 def init_plot():
@@ -287,12 +294,15 @@ def runDijkstra(go, startidx, goalidx, rate, diagonal_enable):
     plt.plot(gridsearch.goal[0], gridsearch.goal[1], 'rs', markersize=4)
     plt.pause(1)
     dij = GridSearchDijkstra(diagonal_enable)
-    answer, iterations = dij.dijkstra(gridsearch)
+    answer = dij.dijkstra(gridsearch)
+    print("The Dijkstra algorithm took " + str(dij.duration) + " seconds.")
     try:
         answer.solution()
         plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
-        plt.suptitle(dij.name + ' - Number of iterations: ' + str(iterations))
+        plt.suptitle(dij.name + ' - Number of iterations: ' + str(dij.iterations) + "\nThe algorithm took "
+                     + str(round(dij.duration,2)) + " seconds.")
         plt.pause(0.01)
     except AttributeError:
         print('No solution present.')
     plt.show(block=False)
+    return dij.duration, dij.iterations, dij.name
