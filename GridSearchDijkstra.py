@@ -188,9 +188,13 @@ class Node:
 class GridSearchDijkstra:
     # GridSearchDijkstra class that executes the Dijkstra grid search
 
-    name = 'Dijkstra Search'
+    def __init__(self,diagonal_enable):
+        if diagonal_enable:
+            self.name = 'Dijkstra Search with Diagonal'
+        else:
+            self.name = 'Dijkstra Search'
 
-    def dijkstra(search: GridSearch):
+    def dijkstra(self, search: GridSearch):
         iterations = 0
         node = Node(search.initial)
         if search.goal_test(node.state):
@@ -222,7 +226,7 @@ class GridSearchDijkstra:
                     frontier.put((child.path_cost, next(unique), child))
             if iterations % 750 == 0:
                 plt.pause(0.01)
-                plt.suptitle(GridSearchDijkstra.name + ' - Number of iterations: ' + str(iterations))
+                plt.suptitle(self.name + ' - Number of iterations: ' + str(iterations))
         print('Failed to find goal.')
         return None, iterations
 
@@ -282,11 +286,12 @@ def runDijkstra(go, startidx, goalidx, rate, diagonal_enable):
     plt.plot(gridsearch.initial[0], gridsearch.initial[1], 'bs', markersize=4)
     plt.plot(gridsearch.goal[0], gridsearch.goal[1], 'rs', markersize=4)
     plt.pause(1)
-    answer, iterations = GridSearchDijkstra.dijkstra(gridsearch)
+    dij = GridSearchDijkstra(diagonal_enable)
+    answer, iterations = dij.dijkstra(gridsearch)
     try:
         answer.solution()
         plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
-        plt.suptitle(GridSearchDijkstra.name + ' - Number of iterations: ' + str(iterations))
+        plt.suptitle(dij.name + ' - Number of iterations: ' + str(iterations))
         plt.pause(0.01)
     except AttributeError:
         print('No solution present.')

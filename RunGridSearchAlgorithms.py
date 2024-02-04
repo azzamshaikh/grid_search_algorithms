@@ -23,7 +23,7 @@ def main():
     runDijkstra(go, (0, 128), (128, 0), rate, True)
 
     # Run Random planner
-    # runRandom(go, (0, 128), (128, 0), rate)
+    runRandom(go, (0, 128), (128, 0), rate)
 
     plt.show()
 

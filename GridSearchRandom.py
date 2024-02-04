@@ -156,6 +156,9 @@ class GridSearchRandom:
             if iterations % 1500 == 0:
                 plt.pause(0.01)
                 plt.suptitle(GridSearchRandom.name + ' - Number of iterations: ' + str(iterations))
+            if iterations >= 16000:
+                print('Max iterations reached.')
+                break
         print('Failed to find goal.')
         return None, iterations
 
