@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import deque
-
+import time
 
 def out_of_bound(idx):
     # Static function to check if the indices for the neighbors are valid
@@ -122,19 +122,22 @@ class Node:
 class GridSearchDFS:
     # GridSearchDFS class that executes the DFS grid search
 
-    name = 'Depth First Search'
+    def __init__(self):
+        self.name = 'Depth First Search'
+        self.iterations = 0
+        self.duration = 0
 
-    def dfs(search: GridSearch):
-        iterations = 0
+    def dfs(self, search: GridSearch):
+        t0 = time.time()
         node = Node(search.initial)
         if search.goal_test(node.state):
             print("Success! Goal is found at " + str(node.state))
-            return node, iterations
+            return node
         frontier = deque([node])
         explored = {search.initial}
         while frontier:
             node = frontier.pop()
-            iterations += 1
+            self.iterations += 1
             if node.state == search.initial:
                 plt.plot(node.state[0], node.state[1], 'bs', markersize=4)
             elif search.goal_test(node.state):
@@ -142,7 +145,9 @@ class GridSearchDFS:
                 plt.pause(0.001)
                 plt.plot(node.state[0], node.state[1], 'rs', markersize=4)
                 plt.pause(0.001)
-                return node, iterations
+                t1 = time.time()
+                self.duration = t1 - t0
+                return node
             else:
                 plt.plot(node.state[0], node.state[1], 'gs', markersize=4)
             for child in node.expand(search):
@@ -151,11 +156,13 @@ class GridSearchDFS:
                     explored.add(s)
                     plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
                     frontier.append(child)
-            if iterations % 50 == 0:
+            if self.iterations % 50 == 0:
                 plt.pause(0.01)
-                plt.suptitle(GridSearchDFS.name + ' - Number of iterations: ' + str(iterations))
+                plt.suptitle(self.name + ' - Number of iterations: ' + str(self.iterations))
+        t1 = time.time()
+        self.duration = t1 - t0
         print('Failed to find goal.')
-        return None, iterations
+        return None
 
 
 def init_plot():
@@ -213,12 +220,15 @@ def runDFS(go, startidx, goalidx, rate):
     plt.plot(gridsearch.initial[0], gridsearch.initial[1], 'bs', markersize=4)
     plt.plot(gridsearch.goal[0], gridsearch.goal[1], 'rs', markersize=4)
     plt.pause(1)
-    answer, iterations = GridSearchDFS.dfs(gridsearch)
+    dfs = GridSearchDFS()
+    answer = dfs.dfs(gridsearch)
     try:
         answer.solution()
         plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
-        plt.suptitle(GridSearchDFS.name + ' - Number of iterations: ' + str(iterations))
+        plt.suptitle(dfs.name + ' - Number of iterations: ' + str(dfs.iterations) + "\nThe algorithm took "
+                     + str(round(dfs.duration,2)) + " seconds.")
         plt.pause(0.01)
     except AttributeError:
         print('No solution present.')
     plt.show(block=False)
+    return dfs.duration, dfs.iterations, dfs.name

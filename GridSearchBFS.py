@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import deque
+import time
 
 
 def out_of_bound(idx):
@@ -119,19 +120,22 @@ class Node:
 class GridSearchBFS:
     # GridSearchBFS class that executes the BFS grid search
 
-    name = 'Breadth First Search'
+    def __init__(self):
+        self.name = 'Breadth First Search'
+        self.iterations = 0
+        self.duration = 0
 
-    def bfs(search: GridSearch):
-        iterations = 0
+    def bfs(self, search: GridSearch):
+        t0 = time.time()
         node = Node(search.initial)
         if search.goal_test(node.state):
             print("Success! Goal is found at " + str(node.state))
-            return node, iterations
+            return node
         frontier = deque([node])
         explored = {search.initial}
         while frontier:
             node = frontier.pop()
-            iterations += 1
+            self.iterations += 1
             if node.state == search.initial:
                 plt.plot(node.state[0], node.state[1], 'bs', markersize=4)
             elif search.goal_test(node.state):
@@ -139,7 +143,9 @@ class GridSearchBFS:
                 plt.pause(0.001)
                 plt.plot(node.state[0], node.state[1], 'rs', markersize=4)
                 plt.pause(0.001)
-                return node, iterations
+                t1 = time.time()
+                self.duration = t1-t0
+                return node
             else:
                 plt.plot(node.state[0], node.state[1], 'gs', markersize=4)
             for child in node.expand(search):
@@ -148,11 +154,13 @@ class GridSearchBFS:
                     explored.add(s)
                     plt.plot(child.state[0], child.state[1], 'ys', markersize=4)
                     frontier.appendleft(child)
-            if iterations % 750 == 0:
+            if self.iterations % 750 == 0:
                 plt.pause(0.01)
-                plt.suptitle(GridSearchBFS.name + ' - Number of iterations: ' + str(iterations))
+                plt.suptitle(self.name + ' - Number of iterations: ' + str(self.iterations))
+        t1 = time.time()
+        self.duration = t1 - t0
         print('Failed to find goal.')
-        return None, iterations
+        return None
 
 
 def init_plot():
@@ -210,12 +218,15 @@ def runBFS(go, startidx, goalidx, rate):
     plt.plot(gridsearch.initial[0], gridsearch.initial[1], 'bs', markersize=4)
     plt.plot(gridsearch.goal[0], gridsearch.goal[1], 'rs', markersize=4)
     plt.pause(1)
-    answer, iterations = GridSearchBFS.bfs(gridsearch)
+    bfs = GridSearchBFS()
+    answer = bfs.bfs(gridsearch)
     try:
         answer.solution()
         plt.title('Obstacle Field\nCoverage rate of ' + str(rate) + '%')  # Add plot title
-        plt.suptitle(GridSearchBFS.name + ' - Number of iterations: ' + str(iterations))
+        plt.suptitle(bfs.name + ' - Number of iterations: ' + str(bfs.iterations) + "\nThe algorithm took "
+                     + str(round(bfs.duration,2)) + " seconds.")
         plt.pause(0.01)
     except AttributeError:
         print('No solution present.')
     plt.show(block=False)
+    return bfs.duration, bfs.iterations, bfs.name
