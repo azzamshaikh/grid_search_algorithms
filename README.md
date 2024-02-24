@@ -1,5 +1,5 @@
 # Grid Search Algorithms
-This repo contains code to implement various grid search algorithms.
+This repo contains code to implement various grid search algorithms. A full report about this project is located in the docs folder.
 
 Below are a few GIFs of depth first search, breadth first search, and Dijkstra's algorithm in action. 
 
